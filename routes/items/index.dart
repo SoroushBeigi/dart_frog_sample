@@ -1,5 +1,6 @@
 import 'package:dart_frog/dart_frog.dart';
 
+//curl --request GET --url http://localhost:8080/items
 Response onRequest(RequestContext context) {
   // TODO: implement route handler
   return Response(body: 'This is a new route for items functionality!');
