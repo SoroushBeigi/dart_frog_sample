@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:tasklist_backend/lists/hash_extension.dart';
+import 'package:tasklist_backend/hash_extension.dart';
 
 part 'list_repository.g.dart';
 
 @visibleForTesting
-Map<String, TaskList> listDb = {};
+Map<String, TaskList> listDB = {};
 
 @JsonSerializable()
 class TaskList extends Equatable {
@@ -33,14 +33,14 @@ class TaskList extends Equatable {
 
 class TaskListRepository {
   Future<TaskList?> listById(String id) async {
-    return listDb[id];
+    return listDB[id];
   }
 
   Map<String, dynamic> getAllLists() {
     final encodedList = <String, dynamic>{};
-    if (listDb.isNotEmpty) {
-      listDb.forEach((key, value) {
-        final currList = listDb[key];
+    if (listDB.isNotEmpty) {
+      listDB.forEach((key, value) {
+        final currList = listDB[key];
         encodedList[key] = currList?.toJson();
       });
     }
@@ -50,21 +50,20 @@ class TaskListRepository {
   String createList({required String name}) {
     final id = name.hashValue;
     final taskList = TaskList(id: id, name: name);
-    listDb[id] = taskList;
+    listDB[id] = taskList;
     return id;
   }
 
-  void deleteList({required String id}){
-    listDb.remove(id);
+  void deleteList({required String id}) {
+    listDB.remove(id);
   }
 
-  Future<void> updateList({required String id,required String name})async{
-    final currList = listDb[id];
+  Future<void> updateList({required String id, required String name}) async {
+    final currList = listDB[id];
 
-    if(currList==null){
+    if (currList == null) {
       return Future.error(Exception('List not found!'));
     }
-    final tasList = TaskList(id: id, name: name);
-    listDb[id] = tasList;
+    listDB[id] = TaskList(id: id, name: name);
   }
 }
