@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:tasklist_backend/lists/hash_extension.dart';
 
 part 'list_repository.g.dart';
 
@@ -28,4 +29,42 @@ class TaskList extends Equatable {
 
   @override
   List<Object?> get props => [id, name];
+}
+
+class TaskListRepository {
+  Future<TaskList?> listById(String id) async {
+    return listDb[id];
+  }
+
+  Map<String, dynamic> getAllLists() {
+    final encodedList = <String, dynamic>{};
+    if (listDb.isNotEmpty) {
+      listDb.forEach((key, value) {
+        final currList = listDb[key];
+        encodedList[key] = currList?.toJson();
+      });
+    }
+    return encodedList;
+  }
+
+  String createList({required String name}) {
+    final id = name.hashValue;
+    final taskList = TaskList(id: id, name: name);
+    listDb[id] = taskList;
+    return id;
+  }
+
+  void deleteList({required String id}){
+    listDb.remove(id);
+  }
+
+  Future<void> updateList({required String id,required String name})async{
+    final currList = listDb[id];
+
+    if(currList==null){
+      return Future.error(Exception('List not found!'));
+    }
+    final tasList = TaskList(id: id, name: name);
+    listDb[id] = tasList;
+  }
 }
