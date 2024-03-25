@@ -26,7 +26,7 @@ Future<Response> _createList(RequestContext context) async {
   final body = await context.request.json() as Map<String, dynamic>;
   final name = body['name'] as String;
   final list = <String, dynamic>{'name': name};
-  final id = Firestore.instance
+  final id = await Firestore.instance
       .collection('tasklists')
       .add(list)
       .then((doc) => doc.id);
