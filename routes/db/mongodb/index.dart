@@ -21,7 +21,7 @@ Future<Response> _createList(RequestContext context) async {
   final body = await context.request.json() as Map<String, dynamic>;
   final name = body['name'] as String;
   final id = name.hashValue;
-  final list = <String, dynamic>{"id":id,'name': name};
+  final list = <String, dynamic>{'id': id, 'name': name};
   final result = await context.read<Db>().collection('lists').insertOne(list);
-  return Response.json(body: {'id': result.id});
+  return Response.json(body: 'Created the list $name with below id: $id');
 }

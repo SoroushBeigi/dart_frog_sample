@@ -30,14 +30,13 @@ Future<Response> _updateList(RequestContext context, String id) async {
 }
 
 Future<Response> _deleteList(RequestContext context, String id) async {
-  await context.read<Db>().collection('lists').deleteOne(('id', id)).then(
-      (value) {
-    return Response(
-      statusCode: HttpStatus.accepted,
-      body: 'Deleted succesfully',
-    );
-  }, onError: (e) {
-    return Response(statusCode: HttpStatus.badRequest);
-  });
+  await context.read<Db>().collection('lists').deleteOne({'id': id}).then(
+    (value) {
+      return Response(statusCode: HttpStatus.noContent);
+    },
+    onError: (e) {
+      return Response(statusCode: HttpStatus.badRequest);
+    },
+  );
   return Response(statusCode: HttpStatus.badRequest);
 }
