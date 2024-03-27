@@ -16,5 +16,7 @@ Handler middleware(Handler handler) {
     final response = await handler
         .use(provider<Connection>((_) => connection))
         .call(context);
+    await connection.close();
+    return response;
   };
 }
