@@ -29,16 +29,16 @@ Future<Response> _createList(RequestContext context) async {
   final id = name?.hashValue;
   if (name != null) {
     try {
-    final result = await context
-        .read<Connection>()
-        .execute("INSERT INTO list (id,name) VALUES ('$id','$name')");
-    if (result.affectedRows == 1) {
-      return Response.json(body: {'success': true});
-    } else {
-      return Response.json(body: {'success': false});
-    }
+      final result = await context
+          .read<Connection>()
+          .execute("INSERT INTO list (id,name) VALUES ('$id','$name')");
+      if (result.affectedRows == 1) {
+        return Response.json(body: {'success': true});
+      } else {
+        return Response.json(body: {'success': false});
+      }
     } catch (e) {
-    return Response(statusCode: HttpStatus.connectionClosedWithoutResponse);
+      return Response(statusCode: HttpStatus.connectionClosedWithoutResponse);
     }
   }
   return Response(statusCode: HttpStatus.badRequest);
