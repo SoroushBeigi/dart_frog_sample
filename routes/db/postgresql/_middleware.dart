@@ -8,10 +8,12 @@ Handler middleware(Handler handler) {
     final connection = await Connection.open(
       Endpoint(
         host: 'localhost',
-        database: 'mytasklist',
+        database: 'postgres',
         username: 'postgres',
+        port: 5432,
         password: Secrets.postgressPass,
       ),
+      settings: const ConnectionSettings(sslMode: SslMode.disable),
     );
     final response = await handler
         .use(provider<Connection>((_) => connection))
