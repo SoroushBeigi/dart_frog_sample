@@ -19,19 +19,20 @@ Future<Response> _getLists(RequestContext context) async {
       await context.read<Connection>().execute('SELECT id , name FROM list');
   for (final row in queryResult) {
     lists.add({'id': row[0], 'name': row[1]});
+    
   }
   return Response.json(body: lists.toString());
+
 }
 
 Future<Response> _createList(RequestContext context) async {
   final body = await context.request.json() as Map<String, dynamic>;
   final name = body['name'] as String?;
-  final id = name?.hashValue;
   if (name != null) {
     try {
       final result = await context
           .read<Connection>()
-          .execute("INSERT INTO list (id,name) VALUES ('$id','$name')");
+          .execute("INSERT INTO list (name) VALUES ('$name')");
       if (result.affectedRows == 1) {
         return Response.json(body: {'success': true});
       } else {
