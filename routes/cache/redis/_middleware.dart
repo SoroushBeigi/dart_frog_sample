@@ -1,6 +1,30 @@
 import 'package:dart_frog/dart_frog.dart';
+import 'package:redis/redis.dart';
+import 'package:tasklist_backend/secrets/secrets.dart';
 
-String? greeting; //Temp storage, aka cache!
+final connection = RedisConnection();
+
 Handler middleware(Handler handler) {
-  return handler.use(provider<String>((context) => greeting ?? 'Hello'));
+  return (context) async {
+    Response response;
+    try {
+      final command = await connection.connect('localhost', '12000');
+      try {
+        await command
+            .send_object(['AUTH', 'Administrator', Secrets.redisPassword]);
+        response = await handler
+            .use(
+              provider<Command>(
+                (_) => command,
+              ),
+            )
+            .call(context);
+      } catch (e) {
+        response = Response.json(body: {'error': 'Authentication went wrong '});
+      }
+    } catch (e) {
+      response = Response.json(body: {'error': 'Something went wrong '});
+    }
+    return response;
+  };
 }
