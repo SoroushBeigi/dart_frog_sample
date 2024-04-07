@@ -8,10 +8,10 @@ Handler middleware(Handler handler) {
   return (context) async {
     Response response;
     try {
-      final command = await connection.connect('localhost', '12000');
+      final command = await connection.connect('localhost', 12000);
       try {
         await command
-            .send_object(['AUTH', 'Administrator', Secrets.redisPassword]);
+            .send_object(['AUTH', Secrets.redisPassword]);
         response = await handler
             .use(
               provider<Command>(
