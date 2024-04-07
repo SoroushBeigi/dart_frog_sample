@@ -10,16 +10,16 @@ class Session extends Equatable {
     required this.token,
     required this.userId,
     required this.createdAt,
-    required this.expireDate,
+    required this.expiryDate,
   });
 
   final String token;
   final String userId;
   final DateTime createdAt;
-  final DateTime expireDate;
+  final DateTime expiryDate;
 
   @override
-  List<Object?> get props => [token, userId, createdAt, expireDate];
+  List<Object?> get props => [token, userId, createdAt, expiryDate];
 }
 
 class SessionRepository {
@@ -29,7 +29,7 @@ class SessionRepository {
       token: generateToken(userId),
       userId: userId,
       createdAt: now,
-      expireDate: now.add(const Duration(days: 1)),
+      expiryDate: now.add(const Duration(days: 1)),
     );
     sessionDatabase[session.token] = session;
     return session;
@@ -37,5 +37,16 @@ class SessionRepository {
 
   String generateToken(String userId) {
     return '${userId}_${DateTime.now().toIso8601String()}'.hashValue;
+  }
+
+  Session? sessionFromToken(String token) {
+    final session = sessionDatabase[token];
+
+    //Checking if the session exists and if its valid (the expiryDate has passed)
+    if (session != null && session.expiryDate.isAfter(DateTime.now())) {
+      return session;
+    } else {
+      return null;
+    }
   }
 }
