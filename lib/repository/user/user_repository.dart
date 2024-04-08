@@ -22,7 +22,7 @@ class User extends Equatable {
 }
 
 class UserRepository {
-  User? userFromCredentials(String username, String password) {
+  Future<User?> userFromCredentials(String username, String password)async {
     final hashedPassword = password.hashValue;
     final users = userDatabase.values.where((element) =>
         element.userName == username && element.password == hashedPassword);
